@@ -16,9 +16,13 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+private slots:
+    void handleStopButton();
+
 private:
     Ui::MainWindow *ui;
     Worker* worker;
+    QThread* thread;
 };
 
 #endif // MAINWINDOW_H

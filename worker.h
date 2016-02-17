@@ -15,10 +15,12 @@ public slots:
 
 signals:
     void finished();
-    void error(QString err);
+
+public:
+    void stop();
 
 private:
-    int sum;
+    QAtomicInt workerStatus;
 };
 
 #endif // WORKER_H
