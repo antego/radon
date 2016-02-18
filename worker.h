@@ -17,10 +17,8 @@ signals:
     void finished();
 
 public:
-    void stop();
 
 private:
-    QAtomicInt workerStatus;
 };
 
 #endif // WORKER_H

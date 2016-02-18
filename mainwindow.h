@@ -18,6 +18,7 @@ public:
 
 private slots:
     void handleStopButton();
+    void handleStartButton();
 
 private:
     Ui::MainWindow *ui;

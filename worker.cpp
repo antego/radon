@@ -2,22 +2,22 @@
 
 #include <QThread>
 
-Worker::Worker() {
+Worker::Worker()
+{
 }
 
-Worker::~Worker() {
+Worker::~Worker()
+{
 
 }
 
-void Worker::process() {
-    workerStatus.storeRelease(1);
-    while (workerStatus.loadAcquire() == 1) {
+void Worker::process()
+{
+    while (!QThread::currentThread()->isInterruptionRequested())
+    {
         qDebug("Hello World!");
         QThread::sleep(1);
     }
     emit finished();
 }
 
-void Worker::stop() {
-    workerStatus.storeRelease(0);
-}
