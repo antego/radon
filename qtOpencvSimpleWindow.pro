@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui opengl testlib
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -15,9 +15,9 @@ LIBS += `pkg-config opencv --cflags --libs`
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    worker.cpp
+    capturer.cpp
 
 HEADERS  += mainwindow.h \
-    worker.h
+    capturer.h
 
 FORMS    += mainwindow.ui

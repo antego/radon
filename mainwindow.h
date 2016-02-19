@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <worker.h>
+#include <capturer.h>
 
 namespace Ui {
 class MainWindow;
@@ -16,14 +16,19 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+public slots:
+    void confirmCameraStop();
+
 private slots:
-    void handleStopButton();
-    void handleStartButton();
+    void handleButton();
 
 private:
     Ui::MainWindow *ui;
-    Worker* worker;
+    Capturer* capturer;
     QThread* thread;
+    bool cameraEnabled;
+    void startCamera();
+    void stopCamera();
 };
 
 #endif // MAINWINDOW_H
