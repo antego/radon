@@ -1,5 +1,7 @@
 #include "capturer.h"
-#include "opencv2/opencv.hpp"
+#include "opencv2/core/core.hpp"
+#include "opencv2/highgui/highgui.hpp"
+
 
 #include <QThread>
 
@@ -20,6 +22,10 @@ void Capturer::process()
 {
     //todo exception handling
     cv::VideoCapture camera(camId);
+    if (!camera.isOpened()) {
+        handleError("Can't initialize a camera");
+        return;
+    }
     camera.set(CV_CAP_PROP_FRAME_WIDTH, frameWidth);
     camera.set(CV_CAP_PROP_FRAME_HEIGHT, frameHeight);
 
@@ -33,6 +39,13 @@ void Capturer::process()
     }
     cv::destroyWindow(windowName);
     camera.release();
+    emit cameraStopped();
+    emit finished();
+}
+
+void Capturer::handleError(const QString& caption)
+{
+    emit error(caption);
     emit cameraStopped();
     emit finished();
 }

@@ -18,6 +18,7 @@ public:
 
 public slots:
     void confirmCameraStop();
+    void handleError(QString errorCaption);
 
 private slots:
     void handleButton();

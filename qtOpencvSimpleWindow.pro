@@ -21,3 +21,5 @@ HEADERS  += mainwindow.h \
     capturer.h
 
 FORMS    += mainwindow.ui
+
+RESOURCES = appresource.qrc

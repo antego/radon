@@ -29,10 +29,11 @@ void MainWindow::handleButton()
 void MainWindow::startCamera()
 {
     thread = new QThread();
-    capturer = new Capturer(0, 640, 480);
+    capturer = new Capturer(0, 1280, 720);
 
     capturer->moveToThread(thread);
     connect(thread, SIGNAL (started()), capturer, SLOT (process()));
+    connect(capturer, SIGNAL (error(QString)), this, SLOT (handleError(QString)));
     connect(capturer, SIGNAL (cameraStopped()), this, SLOT (confirmCameraStop()));
     connect(capturer, SIGNAL (finished()), thread, SLOT (quit()));
     connect(capturer, SIGNAL (finished()), capturer, SLOT (deleteLater()));
@@ -51,6 +52,11 @@ void MainWindow::confirmCameraStop()
 {
     ui->button->setText("Start camera");
     cameraEnabled = false;
+}
+
+void MainWindow::handleError(QString errorCaption)
+{
+    ui->statusLabel->setText(errorCaption);
 }
 
 MainWindow::~MainWindow()
