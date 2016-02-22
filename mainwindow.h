@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QDir>
 #include <capturer.h>
 
 namespace Ui {
@@ -24,16 +25,21 @@ private slots:
     void handleCamButton();
     void takePicture();
     void openFolder();
+    void closeIfNeeded();
+    void ackShot();
 
 private:
     Ui::MainWindow *ui;
     Capturer* capturer;
     QThread* thread;
     QRegularExpression* regexp;
+    QDir* currentDir;
     bool cameraEnabled;
+    bool closeRequested;
     void startCamera();
     void stopCamera();
     void closeEvent(QCloseEvent *event);
+    void reloadFolder();
 };
 
 #endif // MAINWINDOW_H

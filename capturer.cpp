@@ -1,6 +1,7 @@
 #include "capturer.h"
 #include "opencv2/core/core.hpp"
 #include "opencv2/highgui/highgui.hpp"
+#include "stdexcept"
 
 
 #include <QThread>
@@ -8,7 +9,8 @@
 Capturer::Capturer(int camId, int frameWidth, int frameHeight) :
     camId(camId),
     frameWidth(frameWidth),
-    frameHeight(frameHeight)
+    frameHeight(frameHeight),
+    shotRequested(false)
 {
 
 }
@@ -38,6 +40,11 @@ void Capturer::process()
             if (!read)
                 continue;
             cv::imshow(windowName, frame);
+            if (shotRequested)
+            {
+                saveFrame(&frame);
+                shotRequested = false;
+            }
         }
         cv::destroyWindow(windowName);
         camera.release();
@@ -48,4 +55,23 @@ void Capturer::process()
     }
     emit cameraStopped();
     emit finished();
+}
+
+void Capturer::requestShot(QString pictureName)
+{
+    this->pictureName = pictureName;
+    shotRequested = true;
+}
+
+void Capturer::saveFrame(cv::Mat* frame)
+{
+    try
+    {
+        cv::imwrite(pictureName.toStdString(), *frame);
+        emit shotTaken();
+    }
+    catch (std::runtime_error& ex)
+    {
+        emit error((QString)"Error while saving picture\n" + ex.what());
+    }
 }

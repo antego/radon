@@ -12,13 +12,16 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    cameraEnabled(false)
+    currentDir(NULL),
+    cameraEnabled(false),
+    closeRequested(false)
 {
     ui->setupUi(this);
 
     regexp = new QRegularExpression(".*\\((.*)\\)$");
 
     connect(ui->button, SIGNAL (released()), this, SLOT (handleCamButton()));
+    connect(ui->takePictureButton, SIGNAL (released()), this, SLOT (takePicture()));
     connect(ui->chooseFolderButton, SIGNAL (released()), this, SLOT (openFolder()));
 }
 
@@ -43,6 +46,8 @@ void MainWindow::startCamera()
     connect(thread, SIGNAL (started()), capturer, SLOT (process()));
     connect(capturer, SIGNAL (error(QString)), this, SLOT (handleError(QString)));
     connect(capturer, SIGNAL (cameraStopped()), this, SLOT (confirmCameraStop()));
+    connect(capturer, SIGNAL (shotTaken()), this, SLOT (ackShot()));
+    connect(capturer, SIGNAL (finished()), this, SLOT (closeIfNeeded()));
     connect(capturer, SIGNAL (finished()), thread, SLOT (quit()));
     connect(capturer, SIGNAL (finished()), capturer, SLOT (deleteLater()));
     connect(thread, SIGNAL (finished()), thread, SLOT (deleteLater()));
@@ -62,17 +67,28 @@ void MainWindow::confirmCameraStop()
     cameraEnabled = false;
 }
 
+void MainWindow::closeIfNeeded()
+{
+    if (closeRequested)
+        close();
+}
+
 void MainWindow::openFolder()
 {
     QString folder = QFileDialog::getExistingDirectory(this, "Choose image folder");
     ui->folderNameLabel->setText(folder);
 
-    QDir imageDir(folder);
+    currentDir = new QDir(folder);
+    reloadFolder();
+}
+
+void MainWindow::reloadFolder()
+{
     QStringList nameFilters;
     nameFilters << "*.bmp" << "*.jpg" << "*.png";
-    QFileInfoList list = imageDir.entryInfoList(nameFilters, QDir::Files);
+    QFileInfoList list = currentDir->entryInfoList(nameFilters, QDir::Files);
 
-    ui->fileListTable->clear();
+    ui->fileListTable->setRowCount(0);
     for (int i = 0; i < list.size(); i++)
     {
         ui->fileListTable->insertRow(i);
@@ -90,7 +106,36 @@ void MainWindow::openFolder()
 
 void MainWindow::takePicture()
 {
+    if (!cameraEnabled)
+    {
+        handleError("Start camera before taking picture");
+        return;
+    }
 
+    QString fileName = ui->fileNameEdit->text();
+    if (fileName.isEmpty())
+    {
+        handleError("Specify filename");
+        return;
+    }
+
+    if (currentDir == NULL)
+    {
+        handleError("Specify current directory");
+        return;
+    }
+
+    double angle = ui->currentAngleSpin->value();
+    fileName = fileName + "(" + QString::number(angle) + ").bmp";
+    QString fullName = currentDir->absolutePath() + "/" + fileName;
+    capturer->requestShot(fullName);
+    ui->currentAngleSpin->setValue(angle + ui->stepAngleSpin->value());
+}
+
+void MainWindow::ackShot()
+{
+    reloadFolder();
+    ui->statusBar->showMessage("Picture saved", 1000);
 }
 
 void MainWindow::handleError(QString errorCaption)
@@ -102,13 +147,19 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     if (cameraEnabled)
     {
+        closeRequested = true;
         stopCamera();
+        event->ignore();
     }
-    event->accept();
+    else
+    {
+        event->accept();
+    }
 }
 
 MainWindow::~MainWindow()
 {
     delete regexp;
     delete ui;
+    delete currentDir;
 }

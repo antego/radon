@@ -1,6 +1,6 @@
 #ifndef WORKER_H
 #define WORKER_H
-
+#include <opencv2/core/core.hpp>
 #include <QObject>
 
 class Capturer : public QObject {
@@ -9,6 +9,7 @@ class Capturer : public QObject {
 public:
     Capturer(int camId = 0, int frameWidth = 640, int frameHeight = 480);
     ~Capturer();
+    void requestShot(QString pictureName);
 
 public slots:
     void process();
@@ -17,11 +18,13 @@ signals:
     void finished();
     void cameraStopped();
     void error(QString caption);
-
-public:
+    void shotTaken();
 
 private:
     const int camId, frameWidth, frameHeight;
+    QString pictureName;
+    bool shotRequested;
+    void saveFrame(cv::Mat* frame);
 };
 
 #endif // WORKER_H

@@ -31,7 +31,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>410</y>
+      <y>440</y>
       <width>111</width>
       <height>31</height>
      </rect>
@@ -104,29 +104,50 @@
       <x>20</x>
       <y>340</y>
       <width>209</width>
-      <height>62</height>
+      <height>101</height>
      </rect>
     </property>
     <layout class="QFormLayout" name="formLayout">
-     <item row="0" column="0">
+     <item row="1" column="0">
       <widget class="QLabel" name="label">
        <property name="text">
         <string>Current angle</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
+     <item row="1" column="1">
+      <widget class="QDoubleSpinBox" name="currentAngleSpin">
+       <property name="minimum">
+        <double>-1000.000000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>1000.000000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
       <widget class="QLabel" name="label_2">
        <property name="text">
         <string>Angle step</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
+     <item row="2" column="1">
+      <widget class="QDoubleSpinBox" name="stepAngleSpin">
+       <property name="minimum">
+        <double>-100.000000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>File name</string>
+       </property>
+      </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QDoubleSpinBox" name="doubleSpinBox_2"/>
+      <widget class="QLineEdit" name="fileNameEdit"/>
      </item>
     </layout>
    </widget>
