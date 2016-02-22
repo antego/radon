@@ -42,7 +42,7 @@ void Capturer::process()
             cv::imshow(windowName, frame);
             if (shotRequested)
             {
-                saveFrame(&frame);
+                saveFrame(frame);
                 shotRequested = false;
             }
         }
@@ -63,11 +63,11 @@ void Capturer::requestShot(QString pictureName)
     shotRequested = true;
 }
 
-void Capturer::saveFrame(cv::Mat* frame)
+void Capturer::saveFrame(const cv::Mat& frame)
 {
     try
     {
-        cv::imwrite(pictureName.toStdString(), *frame);
+        cv::imwrite(pictureName.toStdString(), frame);
         emit shotTaken();
     }
     catch (std::runtime_error& ex)

@@ -24,7 +24,7 @@ private:
     const int camId, frameWidth, frameHeight;
     QString pictureName;
     bool shotRequested;
-    void saveFrame(cv::Mat* frame);
+    void saveFrame(const cv::Mat& frame);
 };
 
 #endif // WORKER_H
