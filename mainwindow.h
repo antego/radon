@@ -21,7 +21,9 @@ public slots:
     void handleError(QString errorCaption);
 
 private slots:
-    void handleButton();
+    void handleCamButton();
+    void takePicture();
+    void openFolder();
 
 private:
     Ui::MainWindow *ui;
@@ -30,6 +32,7 @@ private:
     bool cameraEnabled;
     void startCamera();
     void stopCamera();
+    void closeEvent(QCloseEvent *event);
 };
 
 #endif // MAINWINDOW_H

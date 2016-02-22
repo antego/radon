@@ -4,17 +4,22 @@
 
 #include <QThread>
 #include <QPushButton>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QCloseEvent>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    cameraEnabled(false)
 {
     ui->setupUi(this);
 
-    connect(ui->button, SIGNAL (released()), this, SLOT (handleButton()));
+    connect(ui->button, SIGNAL (released()), this, SLOT (handleCamButton()));
+    connect(ui->chooseFolderButton, SIGNAL (released()), this, SLOT (openFolder()));
 }
 
-void MainWindow::handleButton()
+void MainWindow::handleCamButton()
 {
     if (!cameraEnabled)
     {
@@ -54,16 +59,32 @@ void MainWindow::confirmCameraStop()
     cameraEnabled = false;
 }
 
-void MainWindow::handleError(QString errorCaption)
+void MainWindow::openFolder()
 {
-    ui->statusLabel->setText(errorCaption);
+    QString folder = QFileDialog::getExistingDirectory(this, "Choose image folder");
+    ui->folderNameLabel->setText(folder);
 }
 
-MainWindow::~MainWindow()
+void MainWindow::takePicture()
+{
+
+}
+
+void MainWindow::handleError(QString errorCaption)
+{
+    QMessageBox::information(this, "Info", errorCaption, QMessageBox::Ok);
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
 {
     if (cameraEnabled)
     {
         stopCamera();
     }
+    event->accept();
+}
+
+MainWindow::~MainWindow()
+{
     delete ui;
 }

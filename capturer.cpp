@@ -21,32 +21,31 @@ Capturer::~Capturer()
 void Capturer::process()
 {
     //todo exception handling
-    cv::VideoCapture camera(camId);
-    if (!camera.isOpened()) {
-        handleError("Can't initialize a camera");
-        return;
-    }
-    camera.set(CV_CAP_PROP_FRAME_WIDTH, frameWidth);
-    camera.set(CV_CAP_PROP_FRAME_HEIGHT, frameHeight);
-
-    const std::string windowName = "Camera " + camId;
-    cv::namedWindow(windowName);
-    while (!QThread::currentThread()->isInterruptionRequested())
+    try
     {
-        cv::Mat frame;
-        camera >> frame;
-        cv::imshow(windowName, frame);
+        cv::VideoCapture camera(camId);
+        if (!camera.isOpened())
+            throw QString("Can't open camera");
+        camera.set(CV_CAP_PROP_FRAME_WIDTH, frameWidth);
+        camera.set(CV_CAP_PROP_FRAME_HEIGHT, frameHeight);
+
+        const std::string windowName = "Camera " + QString::number(camId).toStdString();
+        cv::namedWindow(windowName);
+        while (!QThread::currentThread()->isInterruptionRequested())
+        {
+            cv::Mat frame;
+            bool read = camera.read(frame);
+            if (!read)
+                continue;
+            cv::imshow(windowName, frame);
+        }
+        cv::destroyWindow(windowName);
+        camera.release();
     }
-    cv::destroyWindow(windowName);
-    camera.release();
+    catch (const QString& errorStr)
+    {
+        emit error(errorStr);
+    }
     emit cameraStopped();
     emit finished();
 }
-
-void Capturer::handleError(const QString& caption)
-{
-    emit error(caption);
-    emit cameraStopped();
-    emit finished();
-}
-

@@ -16,12 +16,11 @@ public slots:
 signals:
     void finished();
     void cameraStopped();
-    void error(QString);
+    void error(QString caption);
 
 public:
 
 private:
-    void handleError(const QString& caption);
     const int camId, frameWidth, frameHeight;
 };
 
