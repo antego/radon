@@ -7,6 +7,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QCloseEvent>
+#include <QDir>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -14,6 +15,8 @@ MainWindow::MainWindow(QWidget *parent) :
     cameraEnabled(false)
 {
     ui->setupUi(this);
+
+    regexp = new QRegularExpression(".*\\((.*)\\)$");
 
     connect(ui->button, SIGNAL (released()), this, SLOT (handleCamButton()));
     connect(ui->chooseFolderButton, SIGNAL (released()), this, SLOT (openFolder()));
@@ -63,6 +66,26 @@ void MainWindow::openFolder()
 {
     QString folder = QFileDialog::getExistingDirectory(this, "Choose image folder");
     ui->folderNameLabel->setText(folder);
+
+    QDir imageDir(folder);
+    QStringList nameFilters;
+    nameFilters << "*.bmp" << "*.jpg" << "*.png";
+    QFileInfoList list = imageDir.entryInfoList(nameFilters, QDir::Files);
+
+    ui->fileListTable->clear();
+    for (int i = 0; i < list.size(); i++)
+    {
+        ui->fileListTable->insertRow(i);
+        QTableWidgetItem *item = new QTableWidgetItem(list[i].fileName());
+        ui->fileListTable->setItem(i, 0, item);
+        QString baseName = list[i].baseName();
+        QRegularExpressionMatch match = regexp->match(baseName);
+        if (match.hasMatch())
+        {
+            QTableWidgetItem *item = new QTableWidgetItem(match.captured(1));
+            ui->fileListTable->setItem(i, 1, item);
+        }
+    }
 }
 
 void MainWindow::takePicture()
@@ -86,5 +109,6 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 MainWindow::~MainWindow()
 {
+    delete regexp;
     delete ui;
 }

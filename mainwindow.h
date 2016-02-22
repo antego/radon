@@ -29,6 +29,7 @@ private:
     Ui::MainWindow *ui;
     Capturer* capturer;
     QThread* thread;
+    QRegularExpression* regexp;
     bool cameraEnabled;
     void startCamera();
     void stopCamera();

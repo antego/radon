@@ -5,10 +5,10 @@
 
 #include <QThread>
 
-Capturer::Capturer(int camId, int frameWidth, int frameHeight)
-    : camId(camId)
-    , frameWidth(frameWidth)
-    , frameHeight(frameHeight)
+Capturer::Capturer(int camId, int frameWidth, int frameHeight) :
+    camId(camId),
+    frameWidth(frameWidth),
+    frameHeight(frameHeight)
 {
 
 }
