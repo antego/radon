@@ -11,14 +11,16 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = qtOpencvSimpleWindow
 TEMPLATE = app
 LIBS += `pkg-config opencv --cflags --libs`
-
+CONFIG += c++11
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    capturer.cpp
+    capturer.cpp \
+    radon.cpp
 
 HEADERS  += mainwindow.h \
-    capturer.h
+    capturer.h \
+    radon.h
 
 FORMS    += mainwindow.ui
 

@@ -2,12 +2,16 @@
 #include "ui_mainwindow.h"
 #include "capturer.h"
 
+#include "radon.h"
+
 #include <QThread>
 #include <QPushButton>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QCloseEvent>
 #include <QDir>
+
+#include <opencv2/opencv.hpp>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -23,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->button, SIGNAL (released()), this, SLOT (handleCamButton()));
     connect(ui->takePictureButton, SIGNAL (released()), this, SLOT (takePicture()));
     connect(ui->chooseFolderButton, SIGNAL (released()), this, SLOT (openFolder()));
+    connect(ui->radonButton, SIGNAL (released()), this, SLOT (doRadon()));
 }
 
 void MainWindow::handleCamButton()
@@ -155,6 +160,18 @@ void MainWindow::closeEvent(QCloseEvent *event)
     {
         event->accept();
     }
+}
+
+void MainWindow::doRadon()
+{
+    cv::Mat origin;
+    origin = cv::imread("/home/anton/qt_projects/qtOpencvSimpleWindow/radon-test.png", CV_LOAD_IMAGE_GRAYSCALE);
+    std::vector <float> angles;
+    for (int i = 0; i < 180; i++)
+    {
+        angles.push_back(i);
+    }
+    Radon::radon(origin, angles);
 }
 
 MainWindow::~MainWindow()

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>255</width>
-    <height>547</height>
+    <width>506</width>
+    <height>558</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -151,13 +151,26 @@
      </item>
     </layout>
    </widget>
+   <widget class="QPushButton" name="radonButton">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>50</y>
+      <width>201</width>
+      <height>351</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Do RADON</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>255</width>
+     <width>506</width>
      <height>25</height>
     </rect>
    </property>

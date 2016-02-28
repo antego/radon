@@ -1,9 +1,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "capturer.h"
+
 #include <QMainWindow>
 #include <QDir>
-#include <capturer.h>
 
 namespace Ui {
 class MainWindow;
@@ -27,6 +28,7 @@ private slots:
     void openFolder();
     void closeIfNeeded();
     void ackShot();
+    void doRadon();
 
 private:
     Ui::MainWindow *ui;

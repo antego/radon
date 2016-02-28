@@ -1,5 +1,6 @@
-#ifndef WORKER_H
-#define WORKER_H
+#ifndef CAPTURER_H
+#define CAPTURER_H
+
 #include <opencv2/core/core.hpp>
 #include <QObject>
 
@@ -27,4 +28,4 @@ private:
     void saveFrame(const cv::Mat& frame);
 };
 
-#endif // WORKER_H
+#endif // CAPTURER_H

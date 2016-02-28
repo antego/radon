@@ -1,10 +1,9 @@
 #include "capturer.h"
-#include "opencv2/core/core.hpp"
-#include "opencv2/highgui/highgui.hpp"
-#include "stdexcept"
 
-
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
 #include <QThread>
+#include <stdexcept>
 
 Capturer::Capturer(int camId, int frameWidth, int frameHeight) :
     camId(camId),
@@ -22,7 +21,6 @@ Capturer::~Capturer()
 
 void Capturer::process()
 {
-    //todo exception handling
     try
     {
         cv::VideoCapture camera(camId);
