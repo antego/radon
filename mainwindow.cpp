@@ -166,12 +166,14 @@ void MainWindow::doRadon()
 {
     cv::Mat origin;
     origin = cv::imread("/home/anton/qt_projects/qtOpencvSimpleWindow/radon-test.png", CV_LOAD_IMAGE_GRAYSCALE);
+    qDebug(QString::number(origin.type()).toLocal8Bit());
+    qDebug(QString::number(origin.channels()).toLocal8Bit());
     std::vector <float> angles;
     for (int i = 0; i < 180; i++)
     {
         angles.push_back(i);
     }
-    Radon::radon(origin, angles);
+    Radon::radonSinc(origin);
 }
 
 MainWindow::~MainWindow()

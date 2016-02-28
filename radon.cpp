@@ -39,14 +39,14 @@ void Radon::radon(cv::Mat& origin, std::vector<float> viewAngles)
                 int n = alpha * m + beta + 0.5;
                 if (n >= 0 && n < N)
                 {
-                    sum += origin.at<char>(m,n);
+                    sum += origin.at<unsigned char>(m,n);
                 }
             }
-            result.at<char>(k, h) = sum / (M + N);
+            result.at<unsigned char>(k, h) = sum / (M + N);
         }
     }
-    cv::namedWindow("Display window");
-    cv::imshow("Display window", result);
+    //cv::namedWindow("Display window");
+    //cv::imshow("Display window", result);
 }
 
 void Radon::radonSinc(cv::Mat& origin)
@@ -59,13 +59,14 @@ void Radon::radonSinc(cv::Mat& origin)
     float xMin = -(M - 1) / 2 * dX;
     float yMin = -(N - 1) / 2 * dY;
     int R = 2 * M - 1;
-    cv::Mat result(K, 180, CV_8U);
+    cv::Mat result(R, 180, CV_8U);
 
 
     std::vector <float> angles;
+    float pi = atan(1) * 4;
     for (int i = 0; i < 180; i++)
     {
-        angles.push_back(i);
+        angles.push_back((float)i / 180 * pi);
     }
 
     for (int t = 0; t < angles.size(); t++)
@@ -94,9 +95,9 @@ void Radon::radonSinc(cv::Mat& origin)
                 int sum = 0;
                 for (int m = mMin; m < mMax; m++)
                 {
-                    sum += origin.at<char>(m, alpha*m+beta+0.5);
+                    sum += origin.at<unsigned char>(m,std::round(alpha*m+beta));
                 }
-                result.at<char>(r, t) = dX*sum/sinTheta;
+                result.at<unsigned char>(r, t) =(unsigned char) dX*sum/std::abs(sinTheta) / (M + N);
             }
         }
         else
@@ -120,9 +121,9 @@ void Radon::radonSinc(cv::Mat& origin)
                 int sum = 0;
                 for (int m = mMin; m < mMax; m++)
                 {
-                    sum += origin.at<char>(alpha*m+beta+0.5, m);
+                    sum += origin.at<unsigned char>(std::round(alpha*m+beta), m);
                 }
-                result.at<char>(r, t) = dX*sum / std::abs(cosTheta) / (M + N);
+                result.at<unsigned char>(r, t) =(unsigned char) dX*sum / std::abs(cosTheta) / (M + N);
             }
         }
     }
