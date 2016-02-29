@@ -1,5 +1,7 @@
 #include "radon.h"
 
+using namespace std;
+
 float p(int k)
 {
     int p_min = 0;
@@ -16,39 +18,6 @@ float rho(int r, int R)
     return rhoMin + r * dRho;
 }
 
-void Radon::radon(cv::Mat& origin, std::vector<float> viewAngles)
-{
-    int M = origin.cols;
-    int N = origin.rows;
-    int K = M;
-    float dX = 1;
-    float dY = 1;
-    float xMin = -(M - 1) / 2 * dX;
-    float yMin = -(N - 1) / 2 * dY;
-    cv::Mat result(K, viewAngles.size(), CV_8U);
-
-    for (int k = 0; k < K; k++)
-    {
-        for (unsigned int h = 0; h < viewAngles.size(); h++)
-        {
-            float alpha = p(k) * dX / dY;
-            float beta = (p(k) * xMin + viewAngles[h] - yMin) / dY;
-            int sum = 0;
-            for (int m = 0; m < M; m++)
-            {
-                int n = alpha * m + beta + 0.5;
-                if (n >= 0 && n < N)
-                {
-                    sum += origin.at<unsigned char>(m,n);
-                }
-            }
-            result.at<unsigned char>(k, h) = sum / (M + N);
-        }
-    }
-    //cv::namedWindow("Display window");
-    //cv::imshow("Display window", result);
-}
-
 void Radon::radonSinc(cv::Mat& origin)
 {
     int M = origin.cols;
@@ -59,7 +28,7 @@ void Radon::radonSinc(cv::Mat& origin)
     float xMin = -(M - 1) / 2 * dX;
     float yMin = -(N - 1) / 2 * dY;
     int R = 2 * M - 1;
-    cv::Mat result(R, 180, CV_8U);
+    cv::Mat result = cv::Mat::zeros(R, 180, CV_8UC1);
 
 
     std::vector <float> angles;
@@ -80,22 +49,14 @@ void Radon::radonSinc(cv::Mat& origin)
             for (int r = 0; r < R; r++)
             {
                 float beta = (rho(r, R) - rhoOffset) / (dX * sinTheta);
-                float mMin;
-                float mMax;
-                if (alpha > 0)
-                {
-                    mMin = std::max(0,(int)std::round(- (beta + 1/2) / alpha));
-                    mMax = std::min(M - 1,(int)std::round( (N-1/2-beta) / alpha) );
-                }
-                else
-                {
-                    mMin = std::max(0,(int)std::round( (N-1/2-beta) / alpha) );
-                    mMax = std::min(M-1,(int)std::round(  - (beta + 1/2) / alpha) );
-                }
                 int sum = 0;
-                for (int m = mMin; m < mMax; m++)
+                for (int m = 0; m < M; m++)
                 {
-                    sum += origin.at<unsigned char>(m,std::round(alpha*m+beta));
+                   int n = std::round(alpha * m + beta);
+                   if (n >= 0 && n < N)
+                   {
+                       sum += origin.at<unsigned char>(m,n);
+                   }
                 }
                 result.at<unsigned char>(r, t) =(unsigned char) dX*sum/std::abs(sinTheta) / (M + N);
             }
@@ -106,22 +67,14 @@ void Radon::radonSinc(cv::Mat& origin)
             for (int r = 0; r < R; r++)
             {
                 float beta = (rho(r, R) - rhoOffset) / (dX * cosTheta);
-                float mMin;
-                float mMax;
-                if (alpha > 0)
-                {
-                    mMin = std::max(0,(int)std::round( - (beta + 1/2) / alpha) );
-                    mMax = std::min(M - 1,(int)std::round( (N-1/2-beta) / alpha) );
-                }
-                else
-                {
-                    mMin = std::max(0,(int)std::round( (N-1/2-beta) / alpha) );
-                    mMax = std::min(M-1,(int)std::round(  - (beta + 1/2) / alpha) );
-                }
                 int sum = 0;
-                for (int m = mMin; m < mMax; m++)
+                for (int m = 0; m < M; m++)
                 {
-                    sum += origin.at<unsigned char>(std::round(alpha*m+beta), m);
+                   int n = std::round(alpha * m + beta);
+                   if (n >= 0 && n < N)
+                   {
+                       sum += origin.at<unsigned char>(n,m);
+                   }
                 }
                 result.at<unsigned char>(r, t) =(unsigned char) dX*sum / std::abs(cosTheta) / (M + N);
             }
@@ -129,5 +82,61 @@ void Radon::radonSinc(cv::Mat& origin)
     }
     cv::namedWindow("Display window");
     cv::imshow("Display window", result);
+    cv::waitKey();
+    iradon(result);
 }
 
+void Radon::iradon(cv::Mat& sinogram)
+{
+    int M = sinogram.rows / 2;
+    int T = sinogram.cols;
+    float dX = 1;
+    float dTheta = 1;
+    float dRho = dX / sqrt(2);
+    int R = 2 * M - 1;
+    float rhoMin = - (R - 1) / 2 * dRho;
+    float xMin = -(M - 1) / 2 * dX;
+    float pi = atan(1) * 4;
+
+
+    float cosTheta[T];
+    float sinTheta[T];
+    cv::Mat result = cv::Mat::zeros(M, M, CV_8UC1);
+
+    float rhoOffset = rhoMin / dRho;
+    for (int t = 0; t < T; t++)
+    {
+        float theta = t * dTheta / 180 * pi;
+        cosTheta[t] = cos(theta);
+        sinTheta[t] = sin(theta);
+    }
+    float xc[M][T];
+    float ys[M][T];
+    for (int m = 0; m < M; m++)
+    {
+        float xRel = (xMin + m * dX) / dRho;
+        for (int t = 0; t < T; t++)
+        {
+            xc[m][t] = xRel * cosTheta[t];
+            ys[m][t] = xRel * sinTheta[t] - rhoOffset;
+        }
+    }
+    for (int m = 0; m < M; m++)
+    {
+        for (int n = 0; n < M; n++)
+        {
+            int sum = 0;
+            for (int t = 0; t < T; t++)
+            {
+                float rm = xc[m][t] + ys[n][t];
+                int rl = round(rm);
+                float w = rm - rl;
+                sum = sum + (1-w)*sinogram.at<unsigned char>(rl, t) + w*sinogram.at<unsigned char>(rl+1, t);
+            }
+            result.at<unsigned char>(m, n) = sum * dTheta / 100;
+        }
+    }
+    cv::namedWindow("iradon");
+    cv::imshow("iradon", result);
+    cv::waitKey();
+}

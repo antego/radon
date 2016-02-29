@@ -165,7 +165,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::doRadon()
 {
     cv::Mat origin;
-    origin = cv::imread("/home/anton/qt_projects/qtOpencvSimpleWindow/radon-test.png", CV_LOAD_IMAGE_GRAYSCALE);
+    origin = cv::imread("/home/anton/qt_projects/qtOpencvSimpleWindow/radon-test2.png", CV_LOAD_IMAGE_GRAYSCALE);
     qDebug(QString::number(origin.type()).toLocal8Bit());
     qDebug(QString::number(origin.channels()).toLocal8Bit());
     std::vector <float> angles;

@@ -5,8 +5,8 @@
 class Radon
 {
 public:
-    static void radon(cv::Mat& origin, std::vector<float> viewAngles);
     static void radonSinc(cv::Mat& origin);
+    static void iradon(cv::Mat& sinogram);
 };
 
 #endif // RADON_H
