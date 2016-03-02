@@ -20,6 +20,7 @@ float rho(int r, int R)
 
 void Radon::radonSinc(cv::Mat& origin)
 {
+    //todo: not only square images
     int M = origin.cols;
     int N = origin.rows;
     int K = M;
@@ -80,7 +81,7 @@ void Radon::radonSinc(cv::Mat& origin)
             }
         }
     }
-    cv::namedWindow("Display window");
+    cv::namedWindow("Display window", CV_WINDOW_NORMAL);
     cv::imshow("Display window", result);
     cv::waitKey();
     iradon(result);
@@ -88,6 +89,7 @@ void Radon::radonSinc(cv::Mat& origin)
 
 void Radon::iradon(cv::Mat& sinogram)
 {
+    //not only square images
     int M = sinogram.rows / 2;
     int T = sinogram.cols;
     float dX = 1;
@@ -133,6 +135,7 @@ void Radon::iradon(cv::Mat& sinogram)
                 float w = rm - rl;
                 sum = sum + (1-w)*sinogram.at<unsigned char>(rl, t) + w*sinogram.at<unsigned char>(rl+1, t);
             }
+            //todo: comprehended fraction
             result.at<unsigned char>(m, n) = sum * dTheta / 100;
         }
     }
