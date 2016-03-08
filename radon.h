@@ -1,12 +1,13 @@
 #ifndef RADON_H
 #define RADON_H
-#include <opencv2/opencv.hpp>
+
+#include <opencv2/core/core.hpp>
 
 class Radon
 {
 public:
     static void radonSinc(cv::Mat& origin);
-    static void iradon(cv::Mat& sinogram);
+    static cv::Mat iradon(cv::Mat& sinogram, const std::vector<float>& angles);
 };
 
 #endif // RADON_H

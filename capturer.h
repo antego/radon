@@ -4,7 +4,8 @@
 #include <opencv2/core/core.hpp>
 #include <QObject>
 
-class Capturer : public QObject {
+class Capturer : public QObject
+{
     Q_OBJECT
 
 public:
