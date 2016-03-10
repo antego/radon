@@ -49,7 +49,7 @@ void Scanner::scan()
                     cv::Mat sinogram = sinograms[j];
                     for (int k = 0; k < image.cols / dRho; k++)
                         //maybe change order of column filling
-                        sinogram.at<unsigned char>(k, i) = image.at<unsigned char>(j, k * dRho);
+                        sinogram.at<unsigned char>(k, i) = image.at<unsigned char>(j * dK, k * dRho);
                 }
             }
             else
@@ -62,7 +62,7 @@ void Scanner::scan()
                 {
                     cv::Mat sinogram = sinograms[j];
                     for (int k = 0; k < image.rows / dRho; k++)
-                        sinogram.at<unsigned char>(k, i) = image.at<unsigned char>(k * dRho, j);
+                        sinogram.at<unsigned char>(k, i) = image.at<unsigned char>(k * dRho, j * dK);
                 }
             }
         }
