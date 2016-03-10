@@ -3,6 +3,7 @@
 
 #include <opencv2/highgui/highgui.hpp>
 #include <QDir>
+#include <QDebug>
 #include <stdexcpt.h>
 
 
@@ -46,9 +47,9 @@ void Scanner::scan()
                 for (int j = 0; j < sinograms.size(); j++)
                 {
                     cv::Mat sinogram = sinograms[j];
-                    for (int k = 0; k < image.cols / dRho; k += dK)
+                    for (int k = 0; k < image.cols / dRho; k++)
                         //maybe change order of column filling
-                        sinogram.at<unsigned char>(k, i) = image.at<unsigned char>(j, k);
+                        sinogram.at<unsigned char>(k, i) = image.at<unsigned char>(j, k * dRho);
                 }
             }
             else
@@ -60,8 +61,8 @@ void Scanner::scan()
                 for (int j = 0; j < sinograms.size(); j++)
                 {
                     cv::Mat sinogram = sinograms[j];
-                    for (int k = 0; k < image.rows / dRho; k += dK)
-                        sinogram.at<unsigned char>(k, i) = image.at<unsigned char>(k, j);
+                    for (int k = 0; k < image.rows / dRho; k++)
+                        sinogram.at<unsigned char>(k, i) = image.at<unsigned char>(k * dRho, j);
                 }
             }
         }
@@ -71,6 +72,7 @@ void Scanner::scan()
         {
             cv::Mat slice = Radon::iradon(sinograms[j], angles);
             cv::imwrite(fileList[0].absolutePath().toStdString() + "/slice" + QString::number(j).toStdString() + ".bmp", slice);
+            qDebug() << "writing image " << j;
         }
     }
     catch (const QString& errorStr)

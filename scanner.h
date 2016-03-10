@@ -22,7 +22,6 @@ public slots:
 
 public:
     shaftOrientation shaft;
-    int k;
     int dK;
     int dRho;
     QFileInfoList fileList;

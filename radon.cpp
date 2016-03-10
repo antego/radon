@@ -159,9 +159,11 @@ cv::Mat Radon::iradon(cv::Mat& sinogram, const std::vector<float>& angles)
             {
                 float rm = xc[m][t] + ys[n][t];
                 int rl = rnd(rm);
-                float w = rm - rl;
-                sum += (1 - w) * sinogram.at<unsigned char>(rl, t)
-                            + w * sinogram.at<unsigned char>(rl + 1, t);
+                if (rl < R - 1) {
+                    float w = rm - rl;
+                    sum += (1 - w) * sinogram.at<unsigned char>(rl, t)
+                                + w * sinogram.at<unsigned char>(rl + 1, t);
+                }
             }
             result.at<unsigned char>(m, n) = rnd(sum * dTheta / T);
         }
@@ -177,10 +179,10 @@ cv::Mat Radon::iradon(cv::Mat& sinogram, const std::vector<float>& angles)
     }
     delete [] ys;
 
-    cv::namedWindow("iradon", CV_WINDOW_NORMAL);
+    //cv::namedWindow("iradon", CV_WINDOW_NORMAL);
     //cv::equalizeHist(result, result);
-    cv::imshow("iradon", result);
-    cv::waitKey();
+    //cv::imshow("iradon", result);
+    //cv::waitKey();
 
     return result;
 }
