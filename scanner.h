@@ -16,6 +16,8 @@ public:
 signals:
     void finished();
     void error(QString caption);
+    void setStepsCount(int count);
+    void setCurrentCount(int count);
 
 public slots:
     void scan();

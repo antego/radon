@@ -66,12 +66,14 @@ void Scanner::scan()
                 }
             }
         }
+        emit setStepsCount(sinograms.size());
 
         //stage were sinograms processed
         for (int j = 0; j < sinograms.size(); j++)
         {
             cv::Mat slice = Radon::iradon(sinograms[j], angles);
             cv::imwrite(fileList[0].absolutePath().toStdString() + "/slice" + QString::number(j).toStdString() + ".bmp", slice);
+            emit setCurrentCount(j + 1);
             qDebug() << "writing image " << j;
         }
     }

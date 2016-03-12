@@ -2,6 +2,7 @@
 
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <QDebug>
 
 const float PI=3.14159265358979f;
 
@@ -110,7 +111,7 @@ cv::Mat Radon::iradon(cv::Mat& sinogram, const std::vector<float>& angles)
     float dX = 1;
     float dTheta = 1;
     float dRho = dX / sqrt(2);
-    int R = 2 * M - 1;
+    int R = sinogram.rows;
     float rhoMin = - (R - 1) / 2 * dRho;
     float xMin = -(M - 1) / 2 * dX;
 
@@ -158,14 +159,19 @@ cv::Mat Radon::iradon(cv::Mat& sinogram, const std::vector<float>& angles)
             for (int t = 0; t < T; t++)
             {
                 float rm = xc[m][t] + ys[n][t];
-                int rl = rnd(rm);
-                if (rl < R - 1) {
+                int rl = rm;
+                if (rl < R - 1 && rl >= 0) {
                     float w = rm - rl;
                     sum += (1 - w) * sinogram.at<unsigned char>(rl, t)
                                 + w * sinogram.at<unsigned char>(rl + 1, t);
                 }
             }
-            result.at<unsigned char>(m, n) = rnd(sum * dTheta / T);
+            sum = sum * dTheta / T;
+            if (sum > 255)
+                qDebug() << "bigger than 255!";
+            if (sum < 0)
+                qDebug() << "less than 0!" << sum;
+            result.at<unsigned char>(m, n) = rnd(sum);
         }
     }
 
@@ -178,11 +184,6 @@ cv::Mat Radon::iradon(cv::Mat& sinogram, const std::vector<float>& angles)
         delete [] ys[i];
     }
     delete [] ys;
-
-    //cv::namedWindow("iradon", CV_WINDOW_NORMAL);
-    //cv::equalizeHist(result, result);
-    //cv::imshow("iradon", result);
-    //cv::waitKey();
 
     return result;
 }

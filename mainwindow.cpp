@@ -19,7 +19,10 @@ MainWindow::MainWindow(QWidget *parent) :
     closeRequested(false)
 {
     ui->setupUi(this);
+    ui->progressBar->hide();
 
+    ui->comboBox->addItem("Vertical");
+    ui->comboBox->addItem("Horizontal");
     regexp = new QRegularExpression(".*\\((.*)\\)$");
 
     connect(ui->button, SIGNAL (released()), this, SLOT (handleCamButton()));
@@ -105,6 +108,7 @@ void MainWindow::reloadFolder()
             ui->fileListTable->setItem(i, 1, item);
         }
     }
+    ui->fileListTable->resizeColumnsToContents();
 }
 
 void MainWindow::takePicture()
@@ -181,12 +185,21 @@ void MainWindow::doRadon()
 
     }
     ui->radonButton->setEnabled(false);
+    ui->progressBar->show();
 
-    scanner = new Scanner(ui->deltaKSpin->value(), ui->deltaRhoSpin->value(), fileList, angles, Scanner::shaftOrientation::VERTICAL);
+    Scanner::shaftOrientation orientation;
+    if (ui->comboBox->currentText() == "Vertical")
+        orientation = Scanner::shaftOrientation::VERTICAL;
+    else
+        orientation = Scanner::shaftOrientation::HORIZONTAL;
+
+    scanner = new Scanner(ui->deltaKSpin->value(), ui->deltaRhoSpin->value(), fileList, angles, orientation);
     scanThread = new QThread();
 
     scanner->moveToThread(scanThread);
 
+    connect(scanner, SIGNAL(setStepsCount(int)), ui->progressBar, SLOT(setMaximum(int)));
+    connect(scanner, SIGNAL(setCurrentCount(int)), ui->progressBar, SLOT(setValue(int)));
     connect(scanner, SIGNAL(error(QString)), this, SLOT(handleError(QString)));
     connect(scanner, SIGNAL(finished()), this, SLOT(handleRadonFinish()));
     connect(scanner, SIGNAL(finished()), scanner, SLOT(deleteLater()));
@@ -199,6 +212,8 @@ void MainWindow::doRadon()
 void MainWindow::handleRadonFinish()
 {
     ui->radonButton->setEnabled(true);
+    ui->progressBar->hide();
+    ui->progressBar->reset();
 }
 
 MainWindow::~MainWindow()
