@@ -45,7 +45,7 @@ void MainWindow::handleCamButton()
 
 void MainWindow::startCamera()
 {
-    capturer = new Capturer(0, 1280, 720);
+    capturer = new Capturer(ui->camSpin->value(), ui->widthSpin->value(), ui->heightSpin->value());
     capThread = new QThread();
 
     capturer->moveToThread(capThread);

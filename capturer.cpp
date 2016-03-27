@@ -37,6 +37,7 @@ void Capturer::process()
             if (!read)
                 continue;
             cv::imshow(windowName, frame);
+            cv::waitKey(1);
             if (shotRequested)
             {
                 saveFrame(frame);
