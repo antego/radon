@@ -2,7 +2,8 @@
 #define MAINWINDOW_H
 
 #include "capturer.h"
-#include "scanner.h"
+#include "scannerradon.h"
+#include "scanneriradon.h"
 
 #include <QMainWindow>
 #include <QDir>
@@ -30,13 +31,15 @@ private slots:
     void closeIfNeeded();
     void ackShot();
     void doRadon();
+    void doIRadon();
     void handleRadonFinish();
 
 private:
     Ui::MainWindow *ui;
     Capturer* capturer;
     QThread* capThread;
-    Scanner* scanner;
+    ScannerRadon* scannerRadon;
+    ScannerIRadon* scannerIRadon;
     QThread* scanThread;
     QRegularExpression* regexp;
     QDir* currentDir;

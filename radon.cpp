@@ -27,7 +27,7 @@ float rnd(float number)
     return number < 0.0f ? ceil(number - 0.5f) : floor(number + 0.5f);
 }
 
-void Radon::radonSinc(cv::Mat& origin)
+cv::Mat Radon::radonSinc(cv::Mat& origin, const std::vector<float>& angles)
 {
     int M = origin.rows;
     int N = origin.cols;
@@ -37,13 +37,6 @@ void Radon::radonSinc(cv::Mat& origin)
     float xMin = -(M - 1) / 2 * dX;
     float yMin = -(N - 1) / 2 * dY;
     int R = 2 * std::max(M, N) - 1;
-
-
-    std::vector<float> angles;
-    for (int i = 0; i < 180; i++)
-    {
-        angles.push_back(i / 180.0f * PI);
-    }
 
     cv::Mat result = cv::Mat::zeros(R, angles.size(), CV_8UC1);
     unsigned char maxValue = 1;
@@ -98,10 +91,7 @@ void Radon::radonSinc(cv::Mat& origin)
         }
     }
     result *= 255.0f / maxValue;
-    cv::namedWindow("Display window", CV_WINDOW_NORMAL);
-    cv::imshow("Display window", result);
-    cv::waitKey();
-    iradon(result, angles);
+    return result;
 }
 
 cv::Mat Radon::iradon(cv::Mat& sinogram, const std::vector<float>& angles)

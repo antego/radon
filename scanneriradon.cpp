@@ -1,4 +1,4 @@
-#include "scanner.h"
+#include "scanneriradon.h"
 #include "radon.h"
 
 #include <opencv2/highgui/highgui.hpp>
@@ -7,7 +7,7 @@
 #include <stdexcpt.h>
 
 
-Scanner::Scanner(int dK, int dRho, QFileInfoList fileList, std::vector<float> angles, shaftOrientation shaft) :
+ScannerIRadon::ScannerIRadon(int dK, int dRho, QFileInfoList fileList, std::vector<float> angles, shaftOrientation shaft) :
     dK(dK),
     dRho(dRho),
     fileList(fileList),
@@ -27,7 +27,7 @@ Scanner::Scanner(int dK, int dRho, QFileInfoList fileList, std::vector<float> an
     this->angles = angles;
 }
 
-void Scanner::scan()
+void ScannerIRadon::scan()
 {
     try
     {
@@ -84,7 +84,7 @@ void Scanner::scan()
     emit finished();
 }
 
-Scanner::~Scanner()
+ScannerIRadon::~ScannerIRadon()
 {
 
 }

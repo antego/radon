@@ -6,7 +6,7 @@
 class Radon
 {
 public:
-    static void radonSinc(cv::Mat& origin);
+    static cv::Mat radonSinc(cv::Mat& origin, const std::vector<float>& angles);
     static cv::Mat iradon(cv::Mat& sinogram, const std::vector<float>& angles);
 };
 

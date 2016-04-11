@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>500</width>
+    <width>617</width>
     <height>563</height>
    </rect>
   </property>
@@ -32,7 +32,7 @@
      <rect>
       <x>20</x>
       <y>10</y>
-      <width>461</width>
+      <width>581</width>
       <height>271</height>
      </rect>
     </property>
@@ -144,23 +144,23 @@
      </item>
     </layout>
    </widget>
-   <widget class="QPushButton" name="radonButton">
+   <widget class="QPushButton" name="iradonButton">
     <property name="geometry">
      <rect>
-      <x>370</x>
+      <x>310</x>
       <y>440</y>
       <width>111</width>
       <height>31</height>
      </rect>
     </property>
     <property name="text">
-     <string>Do RADON</string>
+     <string>Do IRADON</string>
     </property>
    </widget>
    <widget class="QWidget" name="formLayoutWidget_2">
     <property name="geometry">
      <rect>
-      <x>320</x>
+      <x>260</x>
       <y>340</y>
       <width>160</width>
       <height>74</height>
@@ -215,7 +215,7 @@
      <rect>
       <x>20</x>
       <y>480</y>
-      <width>461</width>
+      <width>581</width>
       <height>23</height>
      </rect>
     </property>
@@ -327,13 +327,66 @@
      </property>
     </widget>
    </widget>
+   <widget class="QWidget" name="formLayoutWidget_3">
+    <property name="geometry">
+     <rect>
+      <x>440</x>
+      <y>340</y>
+      <width>160</width>
+      <height>74</height>
+     </rect>
+    </property>
+    <layout class="QFormLayout" name="formLayout_3">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_10">
+       <property name="text">
+        <string>delta Theta</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QSpinBox" name="deltaTheta">
+       <property name="minimum">
+        <number>1</number>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_11">
+       <property name="text">
+        <string>Z scale</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QSpinBox" name="zScale">
+       <property name="minimum">
+        <number>1</number>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QPushButton" name="radonButton">
+    <property name="geometry">
+     <rect>
+      <x>490</x>
+      <y>440</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Do RADON</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>500</width>
+     <width>617</width>
      <height>27</height>
     </rect>
    </property>

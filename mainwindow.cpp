@@ -11,6 +11,8 @@
 
 #include <opencv2/highgui/highgui.hpp>
 
+const float PI=3.14159265358979f;
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
@@ -28,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->button, SIGNAL (released()), this, SLOT (handleCamButton()));
     connect(ui->takePictureButton, SIGNAL (released()), this, SLOT (takePicture()));
     connect(ui->chooseFolderButton, SIGNAL (released()), this, SLOT (openFolder()));
+    connect(ui->iradonButton, SIGNAL (released()), this, SLOT (doIRadon()));
     connect(ui->radonButton, SIGNAL (released()), this, SLOT (doRadon()));
 }
 
@@ -172,7 +175,38 @@ void MainWindow::doRadon()
         return;
     }
     std::vector <float> angles;
-    QStringList fileNames;
+    for (int i = 0; i < 180; i+=ui->deltaTheta->value())
+    {
+        angles.push_back(i / 180 * PI);
+    }
+    ui->iradonButton->setEnabled(false);
+    ui->radonButton->setEnabled(false);
+    ui->progressBar->show();
+
+    scannerRadon = new ScannerRadon(ui->deltaTheta->value(), ui->zScale->value(), angles, fileList);
+    scanThread = new QThread();
+
+    scannerRadon->moveToThread(scanThread);
+
+    connect(scannerRadon, SIGNAL(setStepsCount(int)), ui->progressBar, SLOT(setMaximum(int)));
+    connect(scannerRadon, SIGNAL(setCurrentCount(int)), ui->progressBar, SLOT(setValue(int)));
+    connect(scannerRadon, SIGNAL(error(QString)), this, SLOT(handleError(QString)));
+    connect(scannerRadon, SIGNAL(finished()), this, SLOT(handleRadonFinish()));
+    connect(scannerRadon, SIGNAL(finished()), scannerRadon, SLOT(deleteLater()));
+    connect(scannerRadon, SIGNAL(finished()), scanThread, SLOT(quit()));
+    connect(scanThread, SIGNAL(started()), scannerRadon, SLOT(scan()));
+    connect(scanThread, SIGNAL(finished()), scanThread, SLOT(deleteLater()));
+    scanThread->start();
+}
+
+void MainWindow::doIRadon()
+{
+    if (fileList.size() == 0)
+    {
+        handleError("Select files for processing");
+        return;
+    }
+    std::vector <float> angles;
     for (int i = 0; i < ui->fileListTable->rowCount(); i++)
     {
         bool parseOk = true;
@@ -182,29 +216,29 @@ void MainWindow::doRadon()
             handleError("Invalid angle text");
             return;
         }
-
     }
+    ui->iradonButton->setEnabled(false);
     ui->radonButton->setEnabled(false);
     ui->progressBar->show();
 
-    Scanner::shaftOrientation orientation;
+    ScannerIRadon::shaftOrientation orientation;
     if (ui->comboBox->currentText() == "Vertical")
-        orientation = Scanner::shaftOrientation::VERTICAL;
+        orientation = ScannerIRadon::shaftOrientation::VERTICAL;
     else
-        orientation = Scanner::shaftOrientation::HORIZONTAL;
+        orientation = ScannerIRadon::shaftOrientation::HORIZONTAL;
 
-    scanner = new Scanner(ui->deltaKSpin->value(), ui->deltaRhoSpin->value(), fileList, angles, orientation);
+    scannerIRadon = new ScannerIRadon(ui->deltaKSpin->value(), ui->deltaRhoSpin->value(), fileList, angles, orientation);
     scanThread = new QThread();
 
-    scanner->moveToThread(scanThread);
+    scannerIRadon->moveToThread(scanThread);
 
-    connect(scanner, SIGNAL(setStepsCount(int)), ui->progressBar, SLOT(setMaximum(int)));
-    connect(scanner, SIGNAL(setCurrentCount(int)), ui->progressBar, SLOT(setValue(int)));
-    connect(scanner, SIGNAL(error(QString)), this, SLOT(handleError(QString)));
-    connect(scanner, SIGNAL(finished()), this, SLOT(handleRadonFinish()));
-    connect(scanner, SIGNAL(finished()), scanner, SLOT(deleteLater()));
-    connect(scanner, SIGNAL(finished()), scanThread, SLOT(quit()));
-    connect(scanThread, SIGNAL(started()), scanner, SLOT(scan()));
+    connect(scannerIRadon, SIGNAL(setStepsCount(int)), ui->progressBar, SLOT(setMaximum(int)));
+    connect(scannerIRadon, SIGNAL(setCurrentCount(int)), ui->progressBar, SLOT(setValue(int)));
+    connect(scannerIRadon, SIGNAL(error(QString)), this, SLOT(handleError(QString)));
+    connect(scannerIRadon, SIGNAL(finished()), this, SLOT(handleRadonFinish()));
+    connect(scannerIRadon, SIGNAL(finished()), scannerIRadon, SLOT(deleteLater()));
+    connect(scannerIRadon, SIGNAL(finished()), scanThread, SLOT(quit()));
+    connect(scanThread, SIGNAL(started()), scannerIRadon, SLOT(scan()));
     connect(scanThread, SIGNAL(finished()), scanThread, SLOT(deleteLater()));
     scanThread->start();
 }
@@ -212,6 +246,7 @@ void MainWindow::doRadon()
 void MainWindow::handleRadonFinish()
 {
     ui->radonButton->setEnabled(true);
+    ui->iradonButton->setEnabled(true);
     ui->progressBar->hide();
     ui->progressBar->reset();
 }
