@@ -31,15 +31,15 @@ void ScannerRadon::scan()
             if (i == 0)
             {
                 for (int j = 0; j < angles.size(); j++)
-                    unfaces.push_back(cv::Mat::zeros(sinogram.cols, sinogram.rows, CV_8UC1));
+                    unfaces.push_back(cv::Mat::zeros(fileList.size(), sinogram.rows, CV_8UC1));
                 emit setStepsCount(unfaces.size());
             }
 
-            for (int j = 0; j < sinogram.cols; j++)
+            for (int j = 0; j < unfaces.size(); j++)
             {
                 cv::Mat unface = unfaces[j];
                 for (int k = 0; k < sinogram.rows; k++)
-                    unface.at<unsigned char>(j, k) = sinogram.at<unsigned char>(k, j);
+                    unface.at<unsigned char>(i, k) = sinogram.at<unsigned char>(k, j);
             }
         }
 

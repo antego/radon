@@ -16,22 +16,22 @@ const float PI=3.14159265358979f;
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    currentDir(NULL),
     cameraEnabled(false),
-    closeRequested(false)
+    closeRequested(false),
+    regexp(new QRegularExpression(".*\\((.*)\\)$"))
 {
     ui->setupUi(this);
     ui->progressBar->hide();
 
     ui->comboBox->addItem("Vertical");
     ui->comboBox->addItem("Horizontal");
-    regexp = new QRegularExpression(".*\\((.*)\\)$");
 
     connect(ui->button, SIGNAL (released()), this, SLOT (handleCamButton()));
     connect(ui->takePictureButton, SIGNAL (released()), this, SLOT (takePicture()));
     connect(ui->chooseFolderButton, SIGNAL (released()), this, SLOT (openFolder()));
     connect(ui->iradonButton, SIGNAL (released()), this, SLOT (doIRadon()));
     connect(ui->radonButton, SIGNAL (released()), this, SLOT (doRadon()));
+    connect(ui->generateTestData, SIGNAL (released()), this, SLOT (generateTestImages()));
 }
 
 void MainWindow::handleCamButton()
@@ -84,11 +84,16 @@ void MainWindow::closeIfNeeded()
 
 void MainWindow::openFolder()
 {
-    QString folder = QFileDialog::getExistingDirectory(this, "Choose image folder");
-    ui->folderNameLabel->setText(folder);
-
-    currentDir = new QDir(folder);
-    reloadFolder();
+    //TODO show files
+    QFileDialog fileDialog(this);
+    fileDialog.setFileMode(QFileDialog::Directory);
+    if (fileDialog.exec())
+    {
+        QString folder = fileDialog.selectedFiles().first();
+        ui->folderNameLabel->setText(folder);
+        currentDir.reset(new QDir(folder));
+        reloadFolder();
+    }
 }
 
 void MainWindow::reloadFolder()
@@ -129,7 +134,7 @@ void MainWindow::takePicture()
         return;
     }
 
-    if (currentDir == NULL)
+    if (currentDir.isNull())
     {
         handleError("Specify current directory");
         return;
@@ -251,9 +256,23 @@ void MainWindow::handleRadonFinish()
     ui->progressBar->reset();
 }
 
+void MainWindow::generateTestImages()
+{
+    if (currentDir.isNull())
+    {
+        handleError("Specify current directory");
+        return;
+    }
+
+    for (int i = 1; i <= 20; i++)
+    {
+        cv::Mat image(100, 100, CV_8UC1, cv::Scalar(255));
+        cv::circle(image, cv::Point2i(50, 50), i, cv::Scalar(0, 0, 0), -1);
+        cv::imwrite(QString("%1/test_image%2.bmp").arg(currentDir->absolutePath()).arg(i, 2, 10, QChar('0')).toStdString(), image);
+    }
+}
+
 MainWindow::~MainWindow()
 {
-    delete regexp;
     delete ui;
-    delete currentDir;
 }

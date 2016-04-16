@@ -7,6 +7,7 @@
 
 #include <QMainWindow>
 #include <QDir>
+#include <QtCore>
 
 namespace Ui {
 class MainWindow;
@@ -33,6 +34,7 @@ private slots:
     void doRadon();
     void doIRadon();
     void handleRadonFinish();
+    void generateTestImages();
 
 private:
     Ui::MainWindow *ui;
@@ -41,8 +43,8 @@ private:
     ScannerRadon* scannerRadon;
     ScannerIRadon* scannerIRadon;
     QThread* scanThread;
-    QRegularExpression* regexp;
-    QDir* currentDir;
+    QScopedPointer<QRegularExpression> regexp;
+    QScopedPointer<QDir> currentDir;
     QFileInfoList fileList;
     bool cameraEnabled;
     bool closeRequested;
