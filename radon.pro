@@ -10,14 +10,14 @@ SOURCES += main.cpp\
             mainwindow.cpp \
             capturer.cpp \
             radon.cpp \
-    scannerradon.cpp \
-    scanneriradon.cpp
+            radon_scanner.cpp \
+            inverse_radon_scanner.cpp
 
 HEADERS += mainwindow.h \
             capturer.h \
             radon.h \
-    scannerradon.h \
-    scanneriradon.h
+            radon_scanner.h \
+            inverse_radon_scanner.h
 
 FORMS += mainwindow.ui
 

@@ -1,4 +1,4 @@
-#include "scanneriradon.h"
+#include "inverse_radon_scanner.h"
 #include "radon.h"
 
 #include <opencv2/highgui/highgui.hpp>
@@ -7,7 +7,7 @@
 #include <stdexcpt.h>
 
 
-ScannerIRadon::ScannerIRadon(int dK, int dRho, QFileInfoList fileList, std::vector<float> angles, shaftOrientation shaft) :
+InverseRadonScanner::InverseRadonScanner(int dK, int dRho, QFileInfoList fileList, std::vector<float> angles, shaftOrientation shaft) :
     dK(dK),
     dRho(dRho),
     fileList(fileList),
@@ -27,7 +27,7 @@ ScannerIRadon::ScannerIRadon(int dK, int dRho, QFileInfoList fileList, std::vect
     this->angles = angles;
 }
 
-void ScannerIRadon::scan()
+void InverseRadonScanner::scan()
 {
     try
     {
@@ -71,7 +71,7 @@ void ScannerIRadon::scan()
         //stage were sinograms processed
         for (int j = 0; j < sinograms.size(); j++)
         {
-            cv::Mat slice = Radon::iradon(sinograms[j], angles);
+            cv::Mat slice = Radon::inverseRadon(sinograms[j], angles);
             cv::imwrite(fileList[0].absolutePath().toStdString() + "/slice" + QString::number(j).toStdString() + ".bmp", slice);
             emit setCurrentCount(j + 1);
             qDebug() << "writing image " << j;
@@ -84,7 +84,7 @@ void ScannerIRadon::scan()
     emit finished();
 }
 
-ScannerIRadon::~ScannerIRadon()
+InverseRadonScanner::~InverseRadonScanner()
 {
 
 }

@@ -2,16 +2,15 @@
 #define MAINWINDOW_H
 
 #include "capturer.h"
-#include "scannerradon.h"
-#include "scanneriradon.h"
+#include "radon_scanner.h"
+#include "inverse_radon_scanner.h"
 
 #include <QMainWindow>
 #include <QDir>
 #include <QtCore>
 
-namespace Ui {
-class MainWindow;
-}
+#include "ui_mainwindow.h"
+
 
 class MainWindow : public QMainWindow
 {
@@ -32,22 +31,24 @@ private slots:
     void closeIfNeeded();
     void ackShot();
     void doRadon();
-    void doIRadon();
+    void doInverseRadon();
     void handleRadonFinish();
     void generateTestImages();
 
 private:
-    Ui::MainWindow *ui;
-    Capturer* capturer;
-    QThread* capThread;
-    ScannerRadon* scannerRadon;
-    ScannerIRadon* scannerIRadon;
-    QThread* scanThread;
+    Ui_MainWindow ui;
     QScopedPointer<QRegularExpression> regexp;
     QScopedPointer<QDir> currentDir;
     QFileInfoList fileList;
     bool cameraEnabled;
     bool closeRequested;
+
+    Capturer* capturer;
+    QThread* capThread;
+    RadonScanner* radonScanner;
+    InverseRadonScanner* inverseRadonScanner;
+    QThread* scanThread;
+
     void startCamera();
     void stopCamera();
     void closeEvent(QCloseEvent *event);

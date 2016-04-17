@@ -1,4 +1,4 @@
-#include "scannerradon.h"
+#include "radon_scanner.h"
 #include "radon.h"
 
 #include <opencv2/highgui/highgui.hpp>
@@ -7,7 +7,7 @@
 #include <stdexcpt.h>
 
 
-ScannerRadon::ScannerRadon(int dTheta, int zScale, std::vector<float> angles, QFileInfoList fileList) :
+RadonScanner::RadonScanner(int dTheta, int zScale, std::vector<float> angles, QFileInfoList fileList) :
     dTheta(dTheta),
     zScale(zScale),
     angles(angles),
@@ -16,7 +16,7 @@ ScannerRadon::ScannerRadon(int dTheta, int zScale, std::vector<float> angles, QF
 
 }
 
-void ScannerRadon::scan()
+void RadonScanner::scan()
 {
     try
     {
@@ -26,7 +26,7 @@ void ScannerRadon::scan()
             cv::Mat image = cv::imread(fileList[i].absoluteFilePath().toStdString(), CV_LOAD_IMAGE_GRAYSCALE);
             if (!image.data)
                 throw QString("Can't read image \""  + fileList[i].fileName() + "\"");
-            cv::Mat sinogram = Radon::radonSinc(image, angles);
+            cv::Mat sinogram = Radon::radon(image, angles);
 
             if (i == 0)
             {
@@ -58,7 +58,7 @@ void ScannerRadon::scan()
     emit finished();
 }
 
-ScannerRadon::~ScannerRadon()
+RadonScanner::~RadonScanner()
 {
 
 }

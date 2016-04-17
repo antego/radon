@@ -1,16 +1,16 @@
-#ifndef SCANNERRADON_H
-#define SCANNERRADON_H
+#ifndef RADON_SCANNER_H
+#define RADON_SCANNER_H
 
 #include <QDir>
 #include <QObject>
 
-class ScannerRadon : public QObject
+class RadonScanner : public QObject
 {
     Q_OBJECT
 
 public:
-    ScannerRadon(int dTheta, int zScale, std::vector<float> angles, QFileInfoList fileList);
-    ~ScannerRadon();
+    RadonScanner(int dTheta, int zScale, std::vector<float> angles, QFileInfoList fileList);
+    ~RadonScanner();
 
 signals:
     void finished();
@@ -28,4 +28,4 @@ public:
     std::vector<float> angles;
 };
 
-#endif // SCANNERRADON_H
+#endif // RADON_SCANNER_H

@@ -1,17 +1,21 @@
-#ifndef SCANNERIRADON_H
-#define SCANNERIRADON_H
+#ifndef INVERSE_RADON_SCANNER_H
+#define INVERSE_RADON_SCANNER_H
 
 #include <QDir>
 #include <QObject>
 
-class ScannerIRadon : public QObject
+class InverseRadonScanner : public QObject
 {
     Q_OBJECT
 
 public:
     enum shaftOrientation {VERTICAL, HORIZONTAL};
-    ScannerIRadon(int dK, int dRho, QFileInfoList fileList, std::vector<float> angles, shaftOrientation shaft);
-    ~ScannerIRadon();
+    InverseRadonScanner(int dK,
+                        int dRho,
+                        QFileInfoList fileList,
+                        std::vector<float> angles,
+                        shaftOrientation shaft);
+    ~InverseRadonScanner();
 
 signals:
     void finished();
@@ -28,7 +32,6 @@ public:
     int dRho;
     QFileInfoList fileList;
     std::vector<float> angles;
-
 };
 
-#endif // SCANNERIRADON_H
+#endif // INVERSE_RADON_SCANNER_H

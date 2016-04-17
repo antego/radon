@@ -27,7 +27,7 @@ float rnd(float number)
     return number < 0.0f ? ceil(number - 0.5f) : floor(number + 0.5f);
 }
 
-cv::Mat Radon::radonSinc(cv::Mat& origin, const std::vector<float>& angles)
+cv::Mat Radon::radon(const cv::Mat& origin, const std::vector<float>& angles)
 {
     int M = origin.rows;
     int N = origin.cols;
@@ -94,7 +94,7 @@ cv::Mat Radon::radonSinc(cv::Mat& origin, const std::vector<float>& angles)
     return result;
 }
 
-cv::Mat Radon::iradon(cv::Mat& sinogram, const std::vector<float>& angles)
+cv::Mat Radon::inverseRadon(const cv::Mat& sinogram, const std::vector<float>& angles)
 {
     int M = sinogram.rows / 2;
     int T = angles.size();
