@@ -181,7 +181,7 @@ void MainWindow::doRadon()
     std::vector <float> angles;
     for (int i = 0; i < 180; i+=ui.deltaTheta->value())
     {
-        angles.push_back(i / 180 * PI);
+        angles.push_back((double) i / 180 * PI);
     }
     ui.iradonButton->setEnabled(false);
     ui.radonButton->setEnabled(false);
@@ -266,7 +266,7 @@ void MainWindow::generateTestImages()
     for (int i = 1; i <= 20; i++)
     {
         cv::Mat image(100, 100, CV_8UC1, cv::Scalar(255));
-        cv::circle(image, cv::Point2i(50, 50), i, cv::Scalar(0, 0, 0), -1);
+        cv::circle(image, cv::Point2i(70, 70), i, cv::Scalar(0, 0, 0), -1);
         cv::imwrite(QString("%1/test_image%2.bmp").arg(currentDir->absolutePath()).arg(i, 2, 10, QChar('0')).toStdString(), image);
     }
 }

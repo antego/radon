@@ -31,7 +31,7 @@ void RadonScanner::scan()
             if (i == 0)
             {
                 for (int j = 0; j < angles.size(); j++)
-                    unfaces.push_back(cv::Mat::zeros(fileList.size(), sinogram.rows, CV_8UC1));
+                    unfaces.push_back(cv::Mat::zeros(fileList.size() * zScale, sinogram.rows, CV_8UC1));
                 emit setStepsCount(unfaces.size());
             }
 
@@ -39,7 +39,8 @@ void RadonScanner::scan()
             {
                 cv::Mat unface = unfaces[j];
                 for (int k = 0; k < sinogram.rows; k++)
-                    unface.at<unsigned char>(i, k) = sinogram.at<unsigned char>(k, j);
+                    for (int s = 0; s < zScale; s++)
+                        unface.at<unsigned char>(i * zScale + s, k) = sinogram.at<unsigned char>(k, j);
             }
         }
 
