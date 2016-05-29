@@ -1,4 +1,4 @@
-QT       += core gui opengl testlib
+QT       += core gui opengl testlib multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -23,6 +23,11 @@ FORMS += mainwindow.ui
 
 RESOURCES = appresource.qrc
 
-INCLUDEPATH += C:\Users\anton\opencv3.1.0\build\include
-LIBS += -LC:\Users\anton\opencv3.1.0\build\x64\vc12\lib
-LIBS += -lopencv_world310d
+win32 {
+    INCLUDEPATH += C:\Users\anton\opencv3.1.0\build\include
+    LIBS += -LC:\Users\anton\opencv3.1.0\build\x64\vc12\lib
+    LIBS += -lopencv_world310d
+}
+unix {
+    LIBS += `pkg-config opencv --cflags --libs`
+}

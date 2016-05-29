@@ -4,7 +4,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <QDir>
 #include <QDebug>
-#include <stdexcpt.h>
+#include <stdexcept>
 
 
 RadonScanner::RadonScanner(int dTheta, int zScale, std::vector<float> angles, QFileInfoList fileList) :

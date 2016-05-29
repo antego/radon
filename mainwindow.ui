@@ -162,8 +162,8 @@
      <rect>
       <x>260</x>
       <y>340</y>
-      <width>160</width>
-      <height>74</height>
+      <width>210</width>
+      <height>95</height>
      </rect>
     </property>
     <layout class="QFormLayout" name="formLayout_2">
@@ -225,7 +225,7 @@
      <rect>
       <x>20</x>
       <y>290</y>
-      <width>461</width>
+      <width>571</width>
       <height>41</height>
      </rect>
     </property>
@@ -248,7 +248,7 @@
     <widget class="QLabel" name="label_7">
      <property name="geometry">
       <rect>
-       <x>249</x>
+       <x>339</x>
        <y>10</y>
        <width>41</width>
        <height>21</height>
@@ -261,7 +261,7 @@
     <widget class="QSpinBox" name="widthSpin">
      <property name="geometry">
       <rect>
-       <x>290</x>
+       <x>380</x>
        <y>10</y>
        <width>51</width>
        <height>22</height>
@@ -277,7 +277,7 @@
     <widget class="QLabel" name="label_8">
      <property name="geometry">
       <rect>
-       <x>359</x>
+       <x>449</x>
        <y>10</y>
        <width>41</width>
        <height>21</height>
@@ -290,7 +290,7 @@
     <widget class="QSpinBox" name="heightSpin">
      <property name="geometry">
       <rect>
-       <x>400</x>
+       <x>490</x>
        <y>10</y>
        <width>51</width>
        <height>22</height>
@@ -306,9 +306,9 @@
     <widget class="QLabel" name="label_9">
      <property name="geometry">
       <rect>
-       <x>140</x>
+       <x>110</x>
        <y>10</y>
-       <width>41</width>
+       <width>51</width>
        <height>21</height>
       </rect>
      </property>
@@ -316,13 +316,13 @@
       <string>Cam id</string>
      </property>
     </widget>
-    <widget class="QSpinBox" name="camSpin">
+    <widget class="QComboBox" name="cameraComboBox">
      <property name="geometry">
       <rect>
-       <x>181</x>
-       <y>10</y>
-       <width>51</width>
-       <height>22</height>
+       <x>160</x>
+       <y>0</y>
+       <width>161</width>
+       <height>27</height>
       </rect>
      </property>
     </widget>
@@ -413,7 +413,7 @@
      <x>0</x>
      <y>0</y>
      <width>776</width>
-     <height>27</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>

@@ -4,7 +4,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <QDir>
 #include <QDebug>
-#include <stdexcpt.h>
+#include <stdexcept>
 
 
 InverseRadonScanner::InverseRadonScanner(int dK, int dRho, QFileInfoList fileList, std::vector<float> angles, shaftOrientation shaft) :

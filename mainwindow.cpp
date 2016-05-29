@@ -8,6 +8,7 @@
 #include <QMessageBox>
 #include <QCloseEvent>
 #include <QDir>
+#include <QtMultimedia/QCameraInfo>
 
 #include <opencv2/highgui/highgui.hpp>
 
@@ -31,6 +32,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui.iradonButton, SIGNAL (released()), this, SLOT (doInverseRadon()));
     connect(ui.radonButton, SIGNAL (released()), this, SLOT (doRadon()));
     connect(ui.generateTestData, SIGNAL (released()), this, SLOT (generateTestImages()));
+    QList<QCameraInfo> infos = QCameraInfo::availableCameras();
+    for (int i = 0; i < infos.size(); i++) {
+        QString description(infos[i].deviceName() + " " +  infos[i].description());
+        ui.cameraComboBox->addItem(description, i);
+    }
 }
 
 void MainWindow::handleCamButton()
@@ -47,7 +53,7 @@ void MainWindow::handleCamButton()
 
 void MainWindow::startCamera()
 {
-    capturer = new Capturer(ui.camSpin->value(), ui.widthSpin->value(), ui.heightSpin->value());
+    capturer = new Capturer(ui.cameraComboBox->currentIndex(), ui.widthSpin->value(), ui.heightSpin->value());
     capThread = new QThread();
 
     capturer->moveToThread(capThread);
@@ -227,9 +233,9 @@ void MainWindow::doInverseRadon()
 
     InverseRadonScanner::shaftOrientation orientation;
     if (ui.comboBox->currentText() == "Vertical")
-        orientation = InverseRadonScanner::shaftOrientation::VERTICAL;
+        orientation = InverseRadonScanner::VERTICAL;
     else
-        orientation = InverseRadonScanner::shaftOrientation::HORIZONTAL;
+        orientation = InverseRadonScanner::HORIZONTAL;
 
     inverseRadonScanner = new InverseRadonScanner(ui.deltaKSpin->value(), ui.deltaRhoSpin->value(), fileList, angles, orientation);
     scanThread = new QThread();
