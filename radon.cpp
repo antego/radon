@@ -45,7 +45,7 @@ cv::Mat Radon::radon(const cv::Mat& origin, const std::vector<float>& angles)
         float cosTheta = std::cos(angles[t]);
         float sinTheta = std::sin(angles[t]);
         float rhoOffset = xMin * cosTheta + yMin * sinTheta;
-        if (sinTheta > 1 / std::sqrt(2))
+        if (std::abs(sinTheta) > 1 / std::sqrt(2))
         {
             float alpha = - cosTheta / sinTheta;
             for (int r = 0; r < R; r++)
